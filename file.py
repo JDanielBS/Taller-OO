@@ -8,24 +8,24 @@ from extension import Extension
 
 class File():
     def __init__(self, filename, route):
-        self.filename = filename
-        self.fileroute = route+'/'+filename
-        self.words = 0
+        self._filename = filename
+        self.__fileroute = route+'/'+filename
+        self._words = 0
             
     def countWords(self, word):
-        with open(self.fileroute, 'r') as file:
-            ext = os.path.splitext(self.filename)[1]
+        with open(self.__fileroute, 'r') as file:
+            ext = os.path.splitext(self._filename)[1]
             if ext == Extension.TXT.value:
                 content = file.read()
-                self.words = len(re.findall(r'\b{}\b'.format(word), content))
+                self._words = len(re.findall(r'\b{}\b'.format(word), content))
             elif ext == Extension.XML.value:
-                tree = ET.parse(self.fileroute)
+                tree = ET.parse(self.__fileroute)
                 content = ET.tostring(tree.getroot(), encoding='utf8').decode('utf8')
-                self.words = len(re.findall(r'\b{}\b'.format(word), content))
+                self._words = len(re.findall(r'\b{}\b'.format(word), content))
             elif ext == Extension.JSON.value:
                 data = json.load(file)
                 content = json.dumps(data)
-                self.words = len(re.findall(r'\b{}\b'.format(word), content))
+                self._words = len(re.findall(r'\b{}\b'.format(word), content))
             elif ext == Extension.CSV.value:
                 reader = csv.reader(file)
                 for row in reader:
